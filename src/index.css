@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .float-delay-1 {
+    animation-delay: 1s;
+  }
+  .float-delay-2 {
+    animation-delay: 2s;
+  }
+  .float-delay-3 {
+    animation-delay: 3s;
+  }
+
+  @keyframes wave {
+    0% {
+      transform: rotate(0.0deg);
+    }
+    10% {
+      transform: rotate(14.0deg);
+    }
+    20% {
+      transform: rotate(-8.0deg);
+    }
+    30% {
+      transform: rotate(14.0deg);
+    }
+    40% {
+      transform: rotate(-4.0deg);
+    }
+    50% {
+      transform: rotate(10.0deg);
+    }
+    60% {
+      transform: rotate(0.0deg);
+    }
+    100% {
+      transform: rotate(0.0deg);
+    }
+  }
+  .wave-hand {
+    animation: wave 2.5s infinite;
+    transform-origin: 70% 70%;
+  }
+}
