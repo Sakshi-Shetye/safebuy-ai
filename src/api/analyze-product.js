@@ -265,6 +265,22 @@
 
 
 
+// export async function analyzeProduct(productName) {
+//   const response = await fetch("/api/analyze-product", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ productName }),
+//   });
+
+//   if (!response.ok) {
+//     throw new Error("Failed to fetch product data");
+//   }
+
+//   return response.json();
+// }
+
+
+
 export async function analyzeProduct(productName) {
   const response = await fetch("/api/analyze-product", {
     method: "POST",
@@ -272,13 +288,9 @@ export async function analyzeProduct(productName) {
     body: JSON.stringify({ productName }),
   });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch product data");
-  }
-
+  if (!response.ok) throw new Error("Failed to fetch product data");
   return response.json();
 }
-
 
 
 
