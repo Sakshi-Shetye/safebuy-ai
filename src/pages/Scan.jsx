@@ -663,13 +663,119 @@
 
 
 
+// import { useState, useEffect } from "react";
+// import { useLocation } from "react-router-dom";
+// import Footer from "../components/Footer";
+// import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from "react-icons/fa";
+// import { analyzeProduct } from "../api/analyze-product";
+
+// // Helper for ingredient status
+// const getStatusStyles = (status) => {
+//   switch (status) {
+//     case "Good": return { bg: "bg-green-200", text: "text-green-700", icon: FaCheckCircle };
+//     case "Bad": return { bg: "bg-red-200", text: "text-red-700", icon: FaTimesCircle };
+//     case "Okay": return { bg: "bg-yellow-200", text: "text-yellow-700", icon: FaInfoCircle };
+//     default: return { bg: "bg-gray-200", text: "text-gray-700", icon: FaInfoCircle };
+//   }
+// };
+
+// export default function Scan() {
+//   const location = useLocation();
+//   const product = location.state?.product || "Unknown Product";
+
+//   const [analysisData, setAnalysisData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setLoading(true);
+//       try {
+//         const data = await analyzeProduct(product);
+//         setAnalysisData(data);
+//       } catch (error) {
+//         console.error(error);
+//         alert("Failed to fetch product data. Try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchData();
+//   }, [product]);
+
+//   if (loading) {
+//     return <div className="flex flex-col min-h-screen items-center justify-center font-display text-neutral-800">
+//       <p className="text-xl font-semibold">Analyzing product...</p>
+//     </div>;
+//   }
+
+//   if (!analysisData) {
+//     return <div className="flex flex-col min-h-screen items-center justify-center font-display text-neutral-800">
+//       <p className="text-xl font-semibold">No data found for "{product}"</p>
+//     </div>;
+//   }
+
+//   const { productName, category, ingredients, ageBreakdown } = analysisData;
+
+//   return (
+//     <div className="flex flex-col min-h-screen relative overflow-hidden font-display text-neutral-800">
+//       <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-green-200 via-blue-200 to-yellow-100"></div>
+//       <div className="relative z-10 flex-grow flex flex-col items-center justify-start px-4 text-center">
+//         <header className="flex items-center justify-between p-4 w-full md:max-w-lg">
+//           <div className="w-12 h-12"></div>
+//           <h1 className="text-lg font-bold text-gray-800">Analysis Results</h1>
+//           <div className="w-12 h-12"></div>
+//         </header>
+
+//         <main className="flex-grow flex flex-col items-center justify-start px-4 text-center mt-6 w-full md:max-w-lg">
+//           <h1 className="text-4xl font-extrabold text-gray-800 mb-2">{productName}</h1>
+//           <p className="text-lg text-gray-600 font-semibold mb-8">{category}</p>
+
+//           <h2 className="text-2xl font-bold text-gray-800 mb-4">Ingredients</h2>
+//           <div className="w-full space-y-4">
+//             {ingredients.map((item, idx) => {
+//               const { bg, text, icon: Icon } = getStatusStyles(item.status);
+//               return (
+//                 <div key={idx} className="w-full p-4 rounded-2xl shadow-md bg-white flex justify-between items-start">
+//                   <div className="flex-grow pr-4 text-left">
+//                     <h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
+//                     <p className="text-sm text-gray-600">{item.reason}</p>
+//                   </div>
+//                   <div className={`flex-shrink-0 ${bg} ${text} px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1`}>
+//                     <Icon className="text-base" /> {item.status}
+//                   </div>
+//                 </div>
+//               );
+//             })}
+//           </div>
+
+//           <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">Age-wise Recommendations</h2>
+//           <div className="w-full space-y-4">
+//             {ageBreakdown.map((age, idx) => (
+//               <div key={idx} className="w-full p-4 rounded-2xl shadow-md bg-white flex justify-between items-center">
+//                 <span className="text-lg font-bold text-gray-800">{age.label}</span>
+//                 <div className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1 ${age.safe ? "bg-green-200 text-green-700" : "bg-red-200 text-red-700"}`}>
+//                   {age.safe ? <FaCheckCircle /> : <FaTimesCircle />}
+//                   {age.safe ? "Safe" : "Unsafe"}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </main>
+//       </div>
+
+//       <Footer />
+//     </div>
+//   );
+// }
+
+
+
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from "react-icons/fa";
 import { analyzeProduct } from "../api/analyze-product";
 
-// Helper for ingredient status
 const getStatusStyles = (status) => {
   switch (status) {
     case "Good": return { bg: "bg-green-200", text: "text-green-700", icon: FaCheckCircle };
@@ -681,19 +787,18 @@ const getStatusStyles = (status) => {
 
 export default function Scan() {
   const location = useLocation();
-  const product = location.state?.product || "Unknown Product";
-
   const [analysisData, setAnalysisData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const product = location.state?.product || "Unknown Product";
+
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         const data = await analyzeProduct(product);
         setAnalysisData(data);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
         alert("Failed to fetch product data. Try again.");
       } finally {
         setLoading(false);
@@ -702,72 +807,51 @@ export default function Scan() {
     fetchData();
   }, [product]);
 
-  if (loading) {
-    return <div className="flex flex-col min-h-screen items-center justify-center font-display text-neutral-800">
-      <p className="text-xl font-semibold">Analyzing product...</p>
-    </div>;
-  }
-
-  if (!analysisData) {
-    return <div className="flex flex-col min-h-screen items-center justify-center font-display text-neutral-800">
-      <p className="text-xl font-semibold">No data found for "{product}"</p>
-    </div>;
-  }
+  if (loading) return <div className="flex justify-center mt-20 text-xl">Analyzing product...</div>;
+  if (!analysisData) return <div className="flex justify-center mt-20 text-xl">No data found</div>;
 
   const { productName, category, ingredients, ageBreakdown } = analysisData;
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden font-display text-neutral-800">
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-green-200 via-blue-200 to-yellow-100"></div>
-      <div className="relative z-10 flex-grow flex flex-col items-center justify-start px-4 text-center">
-        <header className="flex items-center justify-between p-4 w-full md:max-w-lg">
-          <div className="w-12 h-12"></div>
-          <h1 className="text-lg font-bold text-gray-800">Analysis Results</h1>
-          <div className="w-12 h-12"></div>
-        </header>
+    <div className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-4xl font-bold mb-4">{productName}</h1>
+      <p className="text-lg font-semibold mb-6">{category}</p>
 
-        <main className="flex-grow flex flex-col items-center justify-start px-4 text-center mt-6 w-full md:max-w-lg">
-          <h1 className="text-4xl font-extrabold text-gray-800 mb-2">{productName}</h1>
-          <p className="text-lg text-gray-600 font-semibold mb-8">{category}</p>
-
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Ingredients</h2>
-          <div className="w-full space-y-4">
-            {ingredients.map((item, idx) => {
-              const { bg, text, icon: Icon } = getStatusStyles(item.status);
-              return (
-                <div key={idx} className="w-full p-4 rounded-2xl shadow-md bg-white flex justify-between items-start">
-                  <div className="flex-grow pr-4 text-left">
-                    <h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
-                    <p className="text-sm text-gray-600">{item.reason}</p>
-                  </div>
-                  <div className={`flex-shrink-0 ${bg} ${text} px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1`}>
-                    <Icon className="text-base" /> {item.status}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">Age-wise Recommendations</h2>
-          <div className="w-full space-y-4">
-            {ageBreakdown.map((age, idx) => (
-              <div key={idx} className="w-full p-4 rounded-2xl shadow-md bg-white flex justify-between items-center">
-                <span className="text-lg font-bold text-gray-800">{age.label}</span>
-                <div className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1 ${age.safe ? "bg-green-200 text-green-700" : "bg-red-200 text-red-700"}`}>
-                  {age.safe ? <FaCheckCircle /> : <FaTimesCircle />}
-                  {age.safe ? "Safe" : "Unsafe"}
-                </div>
+      <h2 className="text-2xl font-bold mb-2">Ingredients</h2>
+      <div className="space-y-2">
+        {ingredients.map((item, i) => {
+          const { bg, text, icon: Icon } = getStatusStyles(item.status);
+          return (
+            <div key={i} className="flex justify-between p-3 bg-white rounded-lg shadow">
+              <div>
+                <h3 className="font-bold">{item.name}</h3>
+                <p className="text-sm">{item.reason}</p>
               </div>
-            ))}
+              <div className={`${bg} ${text} flex items-center gap-1 px-2 py-1 rounded-full`}>
+                <Icon /> {item.status}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <h2 className="text-2xl font-bold mt-6 mb-2">Age Recommendations</h2>
+      <div className="space-y-2">
+        {ageBreakdown.map((age, i) => (
+          <div key={i} className="flex justify-between p-3 bg-white rounded-lg shadow">
+            <span className="font-bold">{age.label}</span>
+            <span className={`${age.safe ? "bg-green-200 text-green-700" : "bg-red-200 text-red-700"} px-2 py-1 rounded-full flex items-center gap-1`}>
+              {age.safe ? <FaCheckCircle /> : <FaTimesCircle />}
+              {age.safe ? "Safe" : "Unsafe"}
+            </span>
           </div>
-        </main>
+        ))}
       </div>
 
       <Footer />
     </div>
   );
 }
-
 
 
 
